@@ -1,17 +1,19 @@
 const Board = require('../Models/boardsModel')
 
 
-const addBoard = async (name, description, lists) =>
+const addBoard = async (name, description, lists = []) =>
 {
     const board = new Board({ name: name, description: description, lists: lists })
-    return await board.save().then((board) => board.populate('lists', { name: 1, _id: 1 }))
+    return await board.save()
 }
 
-const updateBoard = async (id, name, description, lists) =>
+const updateBoard = async (id, name, description, lists = []) =>
 {
+
     const board = await Board
-        .findOneAndUpdate({ _id: id }, { name: name, description: description, lists: lists }, { new: true })
-        .then((board) => board.populate('lists', { name: 1, _id: 1 }))
+        .findOneAndUpdate({ _id: id }, { name: name, description: description, }, { new: true })
+        .exec();
+
     return board
 }
 
@@ -37,10 +39,17 @@ const getUserBoards = async (userId) =>
     return boards
 }
 
+const getBoards = async () =>
+{
+    let boards = await Board.find({}).populate('lists').exec()
+    return boards;
+}
+
 module.exports = {
     addBoard,
     updateBoard,
     deleteBoard,
     getBoardById,
-    getUserBoards
+    getUserBoards,
+    getBoards
 }

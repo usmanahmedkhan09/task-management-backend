@@ -16,6 +16,8 @@ router.delete('/deleteBoard/:id', validateBoardId, boardsController.deleteBoardB
 
 router.get('/getBoardById/:id', validateBoardId, boardsController.getBoardById)
 
-router.get('/getUserBoards/:id', validateBoardId, boardsController.getUserBoards)
+router.get('/getUserBoards/:id', validateBoardId, boardsController.getBoards)
+
+router.get('/', boardsController.getBoards)
 
 module.exports = router;

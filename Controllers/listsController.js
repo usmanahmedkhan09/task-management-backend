@@ -21,7 +21,7 @@ const updateList = async (req, res, next) =>
     const { id } = req.params
     try
     {
-        const list = await List.findById(id)
+        const list = await listServices.findById(id)
         if (!list)
             return sendResponse(res, 404, 'List not found.')
 
@@ -36,17 +36,17 @@ const updateList = async (req, res, next) =>
 
 const deleteListById = async (req, res, next) =>
 {
-    const { id } = req.params
+    const { id } = req.params ?? req
     try
     {
-        let response = await List.findByIdAndDelete({ _id: id })
+        let response = await listServices.deleteListById(id)
         if (!response)
             return sendResponse(res, 404, 'List not found.')
 
         return sendResponse(res, 200, 'List successfully deleted.', response)
     } catch (error)
     {
-        return sendResponse(error, 500, 'Error removing list!.')
+        return sendResponse(res, 500, 'Error removing list!.')
     }
 }
 
@@ -66,14 +66,14 @@ const getListById = async (req, res, next) =>
     }
 }
 
-const getBoardLists = async () =>
+const getBoardLists = async (req, res, next) =>
 {
     const { id } = req.params
     try
     {
-        const lists = await Board.findById(id)
-        if (!lists)
-            return sendResponse(res, 404, 'lists not found.')
+        const lists = await listServices.getBoardLists(id)
+        if (!lists.length)
+            return sendResponse(res, 404, 'lists not found.', [])
 
         return sendResponse(res, 200, 'Lists successfully found.', lists)
     } catch (error)

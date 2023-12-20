@@ -3,7 +3,7 @@ const { Schema } = mongoose;
 
 const listsSchema = new Schema({
     name: String,
-    tasks: String,
+    boardId: { type: Schema.Types.ObjectId, ref: 'Board' },
 
 }, { timestamps: true })
 

@@ -1,9 +1,9 @@
 const Lists = require('../Models/listsModel')
 
 
-const addList = async (name) =>
+const addList = async (name, boardId) =>
 {
-    const list = new Lists({ name: name })
+    const list = new Lists({ name: name, boardId: boardId })
     return await list.save()
 }
 
@@ -25,9 +25,16 @@ const deleteListById = async (id) =>
     return list
 }
 
+const getBoardLists = async (boardId) =>
+{
+    const list = await Lists.find({ boardId: boardId })
+    return list
+}
+
 module.exports = {
     addList,
     getListById,
     updateList,
-    deleteListById
+    deleteListById,
+    getBoardLists
 }
