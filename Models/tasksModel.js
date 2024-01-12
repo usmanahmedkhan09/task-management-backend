@@ -5,12 +5,11 @@ const tasksSchema = new Schema({
     title: String,
     description: String,
     listId: { type: String, ref: 'Lists' },
-    subtasks: [{ type: Schema.Types.ObjectId, ref: 'subTasks' }],
-    // due_date: { type: Date, default: new Date().now() },
-    // assigned_to: { type: Date, default: new Date().now() },
-    labels: [String],
-    comments: [],
-    attachments: [],
-}, { timestamps: true })
+}, { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } })
 
+tasksSchema.virtual('subtasks', {
+    ref: 'subTasks',
+    localField: '_id',
+    foreignField: 'taskId'
+});
 module.exports = mongoose.model('Tasks', tasksSchema)

@@ -1,16 +1,15 @@
 const Task = require('../Models/tasksModel')
 
-const addTask = async (title, description, listId, subtasks = []) =>
+const addTask = async (title, description, listId) =>
 {
-    const task = new Task({ title: title, description: description, listId: listId, subtasks: subtasks })
+    const task = new Task({ title: title, description: description, listId: listId })
     return task.save()
 }
 
-const updateTask = async (id, title, description, listId, subtasks) =>
+const updateTask = async (id, title, description, listId,) =>
 {
     const task = await Task
-        .findOneAndUpdate({ _id: id }, { title: title, description: description, listId: listId, subtasks: subtasks }, { new: true })
-        .populate('subtasks', { description: 1, _id: 1 })
+        .findOneAndUpdate({ _id: id }, { title: title, description: description, listId: listId }, { new: true })
         .exec();
 
     return task
@@ -18,7 +17,7 @@ const updateTask = async (id, title, description, listId, subtasks) =>
 
 const getTaskByList = async (id) =>
 {
-    const tasks = await Task.find({ listId: id }).populate('subtasks', { description: 1, _id: 1, isComplete: 1 })
+    const tasks = await Task.find({ listId: id }).populate('subtasks').exec()
     return tasks
 }
 

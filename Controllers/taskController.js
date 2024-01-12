@@ -8,9 +8,10 @@ const addTask = async (req, res, next) =>
     try
     {
         const { title, description, listId, subtasks } = req.body
-        const subtaskDocuments = subtasks.map(subtaskData => new Subtask(subtaskData));
-        let subtaskIds = await Subtask.insertMany(subtaskDocuments)
-        let task = await taskService.addTask(title, description, listId._id, subtaskIds);
+        let task = await taskService.addTask(title, description, listId._id);
+        if (task && subtasks.length > 0)
+            await Promise.all(subtasks.map(async (subtask) => await subTaskService.addSubTask(subtask, task._id)));
+
         return sendResponse(res, 201, 'Task Successfully Created.', task)
     } catch (e)
     {
@@ -24,26 +25,21 @@ const updateTask = async (req, res, next) =>
     const { id } = req.params
     try
     {
-        let updatedSubtasks = []
-        if (subtasks && subtasks.length > 0)
-        {
-            updatedSubtasks = await Promise.all(subtasks.map(async (subtaskData) =>
-            {
-                let response = null;
-                const existingSubtask = await subTaskService.getSubtaskById(subtaskData._id);
-
-                if (existingSubtask && existingSubtask._id)
-                    response = await subTaskService.updateSubtask(existingSubtask._id, subtaskData.description, subtaskData.isComplete);
-                else
-                    response = await subTaskService.addSubTask(subtaskData.description, subtaskData.isComplete);
-
-                return response._id;
-            }));
-        }
-
-        let task = await taskService.updateTask(id, title, description, listId, updatedSubtasks);
+        let task = await taskService.updateTask(id, title, description, listId);
         if (!task)
             return sendResponse(res, 404, 'Task not found.')
+
+        await Promise.all(subtasks.map(async (subtask) =>
+        {
+            const item = await subTaskService.getSubtaskById(subtask._id);
+            if (item && item._id)
+            {
+                await subTaskService.updateSubtask(subtask, task._id);
+            } else
+            {
+                await subTaskService.addSubTask(subtask, task._id)
+            }
+        }));
 
         return sendResponse(res, 200, 'Task successfully updated.', task)
     } catch (e)
@@ -77,6 +73,8 @@ const deleteTaskById = async (req, res, next) =>
         let task = await taskService.deleteTaskById(id)
         if (!task)
             return sendResponse(res, 404, 'Task not found.', [])
+
+        // let { subtask } = board
 
         return sendResponse(res, 200, 'Tasks successfully deleted.', task)
     } catch (e)

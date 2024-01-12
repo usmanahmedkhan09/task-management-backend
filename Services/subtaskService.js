@@ -1,18 +1,18 @@
 const SubTask = require('../Models/subTasksModel')
 
-const addSubTask = async (description, isComplete = false) =>
+const addSubTask = async (subtask, taskId) =>
 {
-    const subtasks = new SubTask({ description: description, isComplete: isComplete })
+    const subtasks = new SubTask({ description: subtask.value, isComplete: subtask.isComplete, taskId: taskId })
     return await subtasks.save()
 }
 
-const updateSubtask = async (id, description, isComplete) =>
+const updateSubtask = async (subtask, taskId) =>
 {
-    const subtask = await SubTask
-        .findOneAndUpdate({ _id: id }, { description: description, isComplete: isComplete }, { new: true })
+    const response = await SubTask
+        .findOneAndUpdate({ _id: subtask._id }, { description: subtask.description, isComplete: subtask.isComplete, taskId: taskId }, { new: true })
         .exec();
 
-    return subtask
+    return response
 }
 
 const getSubtaskById = async (id) =>

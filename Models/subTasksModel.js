@@ -3,7 +3,11 @@ const { Schema } = mongoose;
 
 const subTasksSchema = new Schema({
     description: String,
-    isComplete: Boolean,
+    isComplete: {
+        type: Boolean,
+        default: false
+    },
+    taskId: { type: Schema.Types.ObjectId, ref: 'Tasks' },
 
 }, { timestamps: true })
 
