@@ -15,4 +15,6 @@ router.get('/getTaskByList/:id', validateTaskId, taskController.getTaskByList)
 
 router.delete('/deleteTask/:id', validateTaskId, taskController.deleteTaskById)
 
+router.get('/getAllTasks', taskController.getAllTasks)
+
 module.exports = router;

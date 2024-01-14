@@ -70,11 +70,10 @@ const deleteTaskById = async (req, res, next) =>
     const { id } = req.params
     try
     {
+        await subTaskService.deleteSubtaskByTaskId(id)
         let task = await taskService.deleteTaskById(id)
         if (!task)
             return sendResponse(res, 404, 'Task not found.', [])
-
-        // let { subtask } = board
 
         return sendResponse(res, 200, 'Tasks successfully deleted.', task)
     } catch (e)
@@ -82,9 +81,27 @@ const deleteTaskById = async (req, res, next) =>
         console.log(e)
     }
 }
+
+const getAllTasks = async (req, res, next) =>
+{
+
+    try
+    {
+        let tasks = await taskService.getAllTasks()
+        if (!tasks)
+            return sendResponse(res, 404, 'Tasks not found.', [])
+
+        return sendResponse(res, 200, 'Tasks successfully deleted.', tasks)
+    } catch (e)
+    {
+        console.log(e)
+    }
+}
+
 module.exports = {
     addTask,
     updateTask,
     getTaskByList,
-    deleteTaskById
+    deleteTaskById,
+    getAllTasks
 }

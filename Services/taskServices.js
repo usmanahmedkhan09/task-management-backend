@@ -1,3 +1,4 @@
+const { task } = require('../Middlewares/validationsFieldsMapping')
 const Task = require('../Models/tasksModel')
 
 const addTask = async (title, description, listId) =>
@@ -15,6 +16,13 @@ const updateTask = async (id, title, description, listId,) =>
     return task
 }
 
+const getAllTasks = async () =>
+{
+    const tasks = await Task.find({})
+    return tasks
+}
+
+
 const getTaskByList = async (id) =>
 {
     const tasks = await Task.find({ listId: id }).populate('subtasks').exec()
@@ -30,5 +38,6 @@ module.exports = {
     addTask,
     updateTask,
     getTaskByList,
-    deleteTaskById
+    deleteTaskById,
+    getAllTasks
 }

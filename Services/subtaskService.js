@@ -27,9 +27,16 @@ const deleteSubtaskById = async (id) =>
     return task
 }
 
+const deleteSubtaskByTaskId = async (id) =>
+{
+    let subtasksIds = await SubTask.deleteMany({ taskId: id })
+    return subtasksIds
+}
+
 module.exports = {
     addSubTask,
     updateSubtask,
     getSubtaskById,
-    deleteSubtaskById
+    deleteSubtaskById,
+    deleteSubtaskByTaskId
 }
