@@ -9,7 +9,7 @@ const addSubTask = async (subtask, taskId) =>
 const updateSubtask = async (subtask, taskId) =>
 {
     const response = await SubTask
-        .findOneAndUpdate({ _id: subtask._id }, { description: subtask.description, isComplete: subtask.isComplete, taskId: taskId }, { new: true })
+        .findOneAndUpdate({ _id: subtask._id }, { description: subtask.description, isComplete: subtask.isComplete, taskId: taskId }, {})
         .exec();
 
     return response
