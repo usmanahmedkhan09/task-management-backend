@@ -1,6 +1,7 @@
 const boardsRoutes = require('./Routes/boardsRoute')
 const ListRoutes = require('./Routes/listsRoute')
 const TaskRoutes = require('./Routes/taskRoute')
+const SubTasksRoutes = require('./Routes/subtasksRoute')
 const { sendResponse } = require('./Utils/utilServices')
 
 require('dotenv').config()
@@ -24,6 +25,7 @@ app.use((req, res, next) =>
 app.use('/api/v1/boards', boardsRoutes)
 app.use('/api/v1/lists', ListRoutes)
 app.use('/api/v1/tasks', TaskRoutes)
+app.use('/api/v1/subtasks', SubTasksRoutes)
 
 app.use((error, req, res, next) => sendResponse(res, 500, error.message))
 
