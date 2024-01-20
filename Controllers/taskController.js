@@ -99,10 +99,27 @@ const getAllTasks = async (req, res, next) =>
     }
 }
 
+const updateTaskList = async (req, res, next) =>
+{
+    const { taskId, listId } = req.body
+    try
+    {
+        let tasks = await taskService.updateTaskList(taskId, listId)
+        if (!tasks)
+            return sendResponse(res, 404, 'Tasks not found.', [])
+
+        return sendResponse(res, 200, 'Tasks successfully deleted.', tasks)
+    } catch (e)
+    {
+        console.log(e)
+    }
+}
+
 module.exports = {
     addTask,
     updateTask,
     getTaskByList,
     deleteTaskById,
-    getAllTasks
+    getAllTasks,
+    updateTaskList
 }

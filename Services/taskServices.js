@@ -35,10 +35,20 @@ const deleteTaskById = async (id) =>
     let task = await Task.findByIdAndDelete({ _id: id })
     return task
 }
+
+const updateTaskList = async (taskId, listId) =>
+{
+    const task = await Task
+        .findOneAndUpdate({ _id: taskId }, { listId: listId }, { new: true })
+        .exec();
+
+    return task
+}
 module.exports = {
     addTask,
     updateTask,
     getTaskByList,
     deleteTaskById,
-    getAllTasks
+    getAllTasks,
+    updateTaskList
 }
