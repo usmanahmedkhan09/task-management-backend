@@ -11,6 +11,7 @@ const updateTask = async (id, title, description, listId,) =>
 {
     const task = await Task
         .findOneAndUpdate({ _id: id }, { title: title, description: description, listId: listId }, { new: true })
+        .populate('subtasks')
         .exec();
 
     return task
@@ -25,7 +26,7 @@ const getAllTasks = async () =>
 
 const getTaskByList = async (id) =>
 {
-    const tasks = await Task.find({ listId: id }).populate('subtasks').exec()
+    const tasks = await Task.find({ listId: id }).exec()
     return tasks
 }
 

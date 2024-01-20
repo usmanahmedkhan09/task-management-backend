@@ -7,11 +7,14 @@ const addTask = async (req, res, next) =>
 {
     try
     {
+        let subtasksResponse = []
         const { title, description, listId, subtasks } = req.body
         let task = await taskService.addTask(title, description, listId);
         if (task && subtasks.length > 0)
-            await Promise.all(subtasks.map(async (subtask) => await subTaskService.addSubTask(subtask, task._id)));
-
+        {
+            subtasksResponse = await Promise.all(subtasks.map(async (subtask) => await subTaskService.addSubTask(subtask, task._id)));
+            task["subtasks"] = subtasksResponse
+        }
         return sendResponse(res, 201, 'Task Successfully Created.', task)
     } catch (e)
     {
@@ -25,18 +28,19 @@ const updateTask = async (req, res, next) =>
     const { id } = req.params
     try
     {
-        let task = await taskService.updateTask(id, title, description, listId);
-        if (!task)
-            return sendResponse(res, 404, 'Task not found.')
-
         await Promise.all(subtasks.map(async (subtask) =>
         {
             if (subtask && subtask._id)
-                await subTaskService.updateSubtask(subtask, task._id);
+                await subTaskService.updateSubtask(subtask, id);
             else
-                await subTaskService.addSubTask(subtask, task._id)
+                await subTaskService.addSubTask(subtask, id)
 
         }));
+
+        let task = await taskService.updateTask(id, title, description, listId);
+
+        if (!task)
+            return sendResponse(res, 404, 'Task not found.')
 
         return sendResponse(res, 200, 'Task successfully updated.', task)
     } catch (e)
