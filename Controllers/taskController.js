@@ -31,14 +31,11 @@ const updateTask = async (req, res, next) =>
 
         await Promise.all(subtasks.map(async (subtask) =>
         {
-            const item = await subTaskService.getSubtaskById(subtask._id);
-            if (item && item._id)
-            {
+            if (subtask && subtask._id)
                 await subTaskService.updateSubtask(subtask, task._id);
-            } else
-            {
+            else
                 await subTaskService.addSubTask(subtask, task._id)
-            }
+
         }));
 
         return sendResponse(res, 200, 'Task successfully updated.', task)
