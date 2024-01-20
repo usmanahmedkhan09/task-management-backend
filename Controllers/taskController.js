@@ -8,7 +8,7 @@ const addTask = async (req, res, next) =>
     try
     {
         const { title, description, listId, subtasks } = req.body
-        let task = await taskService.addTask(title, description, listId._id);
+        let task = await taskService.addTask(title, description, listId);
         if (task && subtasks.length > 0)
             await Promise.all(subtasks.map(async (subtask) => await subTaskService.addSubTask(subtask, task._id)));
 
